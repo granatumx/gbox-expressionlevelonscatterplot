@@ -24,21 +24,35 @@ def main():
     coords = sample_coords.get("coords")
     dim_names = sample_coords.get("dimNames")
 
-    scatter_df = pd.DataFrame(
-        {"x": [a[0] for a in coords.values()], "y": [a[1] for a in coords.values()], "value": df.loc[gene_id, :]},
-        index=coords.keys(),
-    )
+    if gene_id in df.index:
 
-    plt.scatter(x=scatter_df["x"], y=scatter_df["y"], s=5000 / scatter_df.shape[0], c=scatter_df["value"], cmap="Reds")
-    plt.colorbar()
+        scatter_df = pd.DataFrame(
+            {"x": [a[0] for a in coords.values()], "y": [a[1] for a in coords.values()], "value": df.loc[gene_id, :]},
+            index=coords.keys(),
+        )
 
-    plt.xlabel(dim_names[0])
-    plt.ylabel(dim_names[1])
-    plt.tight_layout()
+        plt.scatter(x=scatter_df["x"], y=scatter_df["y"], s=5000 / scatter_df.shape[0], c=scatter_df["value"], cmap="Reds")
+        plt.colorbar()
 
-    gn.add_current_figure_to_results("Scatter-plot", dpi=75)
+        plt.xlabel(dim_names[0])
+        plt.ylabel(dim_names[1])
+        plt.tight_layout()
 
-    gn.commit()
+        gn.add_current_figure_to_results("Scatter-plot", dpi=75)
+
+        gn.commit()
+
+    else:
+
+        # if the gene ID entered is not present in the assay
+        # Communicate it to the user
+        fig = plt.figure()
+
+        message = 'The selected gene is not present in the assay\nSee the step that generated the assay'
+        fig.text(5, 5, message, style='bold', fontsize=24)
+
+        gn.add_current_figure_to_results('error message', dpi=75)
+        gn.commit()
 
 
 if __name__ == "__main__":
