@@ -46,7 +46,7 @@ def main():
     else:
 
         # if the gene ID entered is not present in the assay
-        # Communicate it to the user and output a table of gene ID's
+        # Communicate it to the user and output a table of available gene ID's
 
         genes_in_assay = np.transpose(df.index.values)
         genes_in_assay = np.reshape(genes_in_assay, (genes_in_assay.shape[0], 1)) # reshape to make it a 2D array
@@ -56,9 +56,11 @@ def main():
 
         message = 'The selected gene is not present in the assay\nSee the step that generated the assay'
         axs[0].text(0.1, 0.5, message, fontsize=24)
+        axs[0]('off')
 
         # create table
-        axs[1].table(cellText=genes_in_assay, cellLoc='center', colLabels=['Gene'], loc='bottom')
+        axs[1].table(cellText=genes_in_assay, cellLoc='center', colLabels=['Gene'])
+        axs[1]('off')
 
         gn.add_current_figure_to_results('error message', dpi=75)
         gn.commit()
