@@ -48,7 +48,8 @@ def main():
         # if the gene ID entered is not present in the assay
         # Communicate it to the user and output a table of gene ID's
 
-        genes_in_assay = np.transpose(df.index.values) # this will be a numpy array of shape (# genes, 1)
+        genes_in_assay = np.transpose(df.index.values)
+        genes_in_assay = np.reshape(genes_in_assay, (genes_in_assay.shape[0], 1)) # reshape to make it a 2D array
         print(genes_in_assay.shape)
 
         fig, axs = plt.subplots(2)
