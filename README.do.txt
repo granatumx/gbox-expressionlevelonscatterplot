@@ -1,5 +1,5 @@
 !bquote
-`gbox-py` is a gbox that provides a number of gboxes from Python. It is part of the standard gbox set.
+`gbox-expressionlevelonscatterplot` is a gbox that provides a gene plotting in Python by expression level.
 !equote
 
 ===== Prerequisites =====
@@ -28,7 +28,7 @@ pulled if they do not exist locally on the system. Convenience scripts are provi
 
 !bc sys
 $ gx run.sh                                  # Will start the database, taskrunner, and webapp
-$ gx installGbox.sh granatumx/gbox-py:1.0.0  # Install this gbox
+$ gx installGbox.sh granatumx/gbox-expressionlevelonscatterplot:1.0.0  # Install this gbox
 
 # Now go to http://localhost:34567 and see this gbox installed when you add a step.
 !ec
