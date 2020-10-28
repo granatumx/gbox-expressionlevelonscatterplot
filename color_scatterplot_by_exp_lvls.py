@@ -56,7 +56,7 @@ def main():
         axs[0].text(0.1, 0.5, message, fontsize=24)
 
         # create table
-        axs[1].table(cellText=genes_in_assay, cellLoc='center', colLabels=['Gene'] loc='bottom')
+        axs[1].table(cellText=genes_in_assay, cellLoc='center', colLabels=['Gene'], loc='bottom')
 
         gn.add_current_figure_to_results('error message', dpi=75)
         gn.commit()
