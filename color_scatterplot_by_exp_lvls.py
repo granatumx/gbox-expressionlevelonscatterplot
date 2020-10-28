@@ -49,7 +49,7 @@ def main():
         fig = plt.figure()
 
         message = 'The selected gene is not present in the assay\nSee the step that generated the assay'
-        fig.text(5, 5, message, fontsize=24)
+        fig.text(0.5, 0.5, message, fontsize=24)
 
         gn.add_current_figure_to_results('error message', dpi=75)
         gn.commit()
