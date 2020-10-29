@@ -65,9 +65,9 @@ def main():
         gn.add_current_figure_to_results('error message', dpi=75)"""
 
         
-        message = 'The selected gene is not present in the assay\nSee the step that generated the assay'
-        genes_in_assay = df.index
-        gn.add_pandas_df(genes_in_assay, message)
+        description = 'The selected gene is not present in the assay\nSee the step that generated the assay'
+        genes_in_assay = pd.DataFrame(df.index.tolist(), columns=['Gene'])
+        gn.add_pandas_df(genes_in_assay, description)
 
         gn.commit()
 
