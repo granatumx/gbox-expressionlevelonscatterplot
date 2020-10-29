@@ -53,13 +53,14 @@ def main():
         print(genes_in_assay.shape)
 
         fig, axs = plt.subplots(2)
-        fig.axis('off')
 
         message = 'The selected gene is not present in the assay\nSee the step that generated the assay'
         axs[0].text(0.1, 0.5, message, fontsize=24)
+        axs[0].axis('off')
 
         # create table
         axs[1].table(cellText=genes_in_assay, cellLoc='center', colLabels=['Gene'])
+        axs[1].axis('off')
 
         gn.add_current_figure_to_results('error message', dpi=75)
         gn.commit()
