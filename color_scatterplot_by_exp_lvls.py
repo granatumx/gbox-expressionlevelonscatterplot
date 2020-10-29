@@ -47,26 +47,9 @@ def main():
 
         # if the gene ID entered is not present in the assay
         # Communicate it to the user and output a table of available gene ID's
-
-        """genes_in_assay = np.transpose(df.index.values)
-        genes_in_assay = np.reshape(genes_in_assay, (genes_in_assay.shape[0], 1)) # reshape to make it a 2D array
-        print(genes_in_assay.shape)
-
-        fig, axs = plt.subplots(2)
-
-        message = 'The selected gene is not present in the assay\nSee the step that generated the assay'
-        axs[0].text(0.1, 0.5, message, fontsize=16)
-        axs[0].axis('off')
-
-        # create table
-        axs[1].table(cellText=genes_in_assay, cellLoc='center', colLabels=['Gene'])
-        axs[1].axis('off')
-
-        gn.add_current_figure_to_results('error message', dpi=75)"""
-
         
-        description = 'The selected gene is not present in the assay\nSee the step that generated the assay'
-        genes_in_assay = pd.DataFrame(df.index.tolist(), columns=['Gene'])
+        description = 'The selected gene is not present in the assay. See the step that generated the assay'
+        genes_in_assay = pd.DataFrame(df.index.tolist(), columns=['Gene unavailable in assay: choose from below'])
         gn.add_pandas_df(genes_in_assay, description)
 
         gn.commit()
