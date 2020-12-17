@@ -2,8 +2,8 @@ id: official_py_docker-{VER}
 
 meta:
   maintainer:
-    name: Xun Zhu
-    email: zhuxun@gmail.com
+    name: GranatumX
+    email: lana.garmire.group@gmail.com
 
 gboxes:
   - ./yamls/color_scatterplot_by_exp_lvls.yaml
