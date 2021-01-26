@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from granatum_sdk import Granatum
+from palettable.cmocean.sequential import Amp_3
 
 import os
 import traceback
@@ -32,7 +33,7 @@ def main():
             index=coords.keys(),
         )
 
-        plt.scatter(x=scatter_df["x"], y=scatter_df["y"], s=5000 / scatter_df.shape[0], c=scatter_df["value"], cmap="Reds")
+        plt.scatter(x=scatter_df["x"], y=scatter_df["y"], s=5000 / scatter_df.shape[0], c=scatter_df["value"], cmap=Amp_3)
         plt.colorbar()
 
         plt.xlabel(dim_names[0])
