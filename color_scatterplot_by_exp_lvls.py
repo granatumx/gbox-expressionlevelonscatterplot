@@ -35,7 +35,7 @@ def main():
             index=coords.keys(),
         )
 
-        plt.scatter(x=scatter_df["x"], y=scatter_df["y"], s=5000 / scatter_df.shape[0], c=scatter_df["value"], cmap=LinearSegmentedColormap("fire", cdict, N=256)) #Amp_3.mpl_colormap)
+        plt.scatter(x=scatter_df["x"], y=scatter_df["y"], s=5000 / scatter_df.shape[0], c=np.clip(scatter_df["value"],0.0, None, out=None), cmap=LinearSegmentedColormap("fire", cdict, N=256)) #Amp_3.mpl_colormap)
         plt.colorbar()
 
         plt.xlabel(dim_names[0])
