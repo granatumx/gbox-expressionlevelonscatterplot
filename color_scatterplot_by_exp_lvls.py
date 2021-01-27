@@ -6,6 +6,7 @@ import numpy as np
 
 from granatum_sdk import Granatum
 from palettable.cmocean.sequential import Amp_3
+from matplotlib.colors import LinearSegmentedColormap
 
 import os
 import traceback
@@ -15,6 +16,7 @@ from gbox_py_helpers import bug_report
 
 COLORS = ["#3891ea", "#29ad19", "#ac2d58", "#db7580", "#ed2310", "#ca2dc2", "#5f7575", "#7cc1b5", "#c3bd78", "#4ffa24"]
 
+cdict = {'red':   [(0.0,   0.86, 0.86), (0.192, 0.95, 0.95), (0.385, 0.95, 0.95), (0.577, 0.88, 0.88), (1.0,   0.7,  0.7)], 'green': [(0.0,   0.86, 0.86), (0.192, 0.77, 0.77), (0.385, 0.64, 0.64), (0.577, 0.45, 0.45), (1.0,   0.04,  0.04)], 'blue':  [(0.0,   0.86, 0.86), (0.192, 0.63, 0.63), (0.385, 0.43, 0.43), (0.577, 0.32, 0.32), (1.0,   0.1,  0.1)]}
 
 def main():
     gn = Granatum()
@@ -33,7 +35,7 @@ def main():
             index=coords.keys(),
         )
 
-        plt.scatter(x=scatter_df["x"], y=scatter_df["y"], s=5000 / scatter_df.shape[0], c=scatter_df["value"], cmap=Amp_3.mpl_colormap)
+        plt.scatter(x=scatter_df["x"], y=scatter_df["y"], s=5000 / scatter_df.shape[0], c=scatter_df["value"], cmap=LinearSegmentedColormap.from_list("fire", cdict, N=256)) #Amp_3.mpl_colormap)
         plt.colorbar()
 
         plt.xlabel(dim_names[0])
