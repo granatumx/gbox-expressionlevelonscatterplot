@@ -24,6 +24,8 @@ def main():
     sample_coords = gn.get_import("viz_data")
     df = gn.pandas_from_assay(gn.get_import("assay"))
     gene_id = gn.get_arg("gene_id")
+    min_level = gn.get_arg("min_level")
+    max_level = gn.get_arg("max_level")
 
     coords = sample_coords.get("coords")
     dim_names = sample_coords.get("dimNames")
@@ -35,7 +37,7 @@ def main():
             index=coords.keys(),
         )
 
-        plt.scatter(x=scatter_df["x"], y=scatter_df["y"], s=5000 / scatter_df.shape[0], c=np.clip(scatter_df["value"],0.0, None, out=None), cmap=LinearSegmentedColormap("fire", cdict, N=256)) #Amp_3.mpl_colormap)
+        plt.scatter(x=scatter_df["x"], y=scatter_df["y"], s=5000 / scatter_df.shape[0], c=np.clip(scatter_df["value"], min_level, max_level, out=None), cmap=LinearSegmentedColormap("fire", cdict, N=256)) #Amp_3.mpl_colormap)
         plt.colorbar()
 
         plt.xlabel(dim_names[0])

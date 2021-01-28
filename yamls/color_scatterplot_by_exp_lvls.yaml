@@ -24,3 +24,15 @@ frontend:
       label: The gene ID to use for coloring
       description: Must be a gene ID appearing in the assay selected.
       default: ''
+    - type: number
+      injectInto: min_level
+      label: The minimum level on the plot 
+      description: All values lower are clipped to this value
+      default: 0.0
+      step: 0.1
+    - type: number
+      injectInto: max_level
+      label: The maximum level on the plot 
+      description: All values greater are clipped to this value
+      default: 999999.0
+      step: 0.1
