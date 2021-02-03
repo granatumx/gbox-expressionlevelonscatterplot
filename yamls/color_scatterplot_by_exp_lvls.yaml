@@ -21,7 +21,7 @@ frontend:
   args:
     - type: text
       injectInto: gene_ids
-      label: The gene ID (s) to use for coloring (comma separated: XIST, GAS7)
+      label: The gene ID (s) to use for coloring (comma separated... XIST, GAS7)
       description: Must be gene IDs appearing in the assay selected.
       default: ''
     - type: number
