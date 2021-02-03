@@ -53,8 +53,8 @@ def main():
                     index=coords.keys())
 
             values_df = np.clip(scatter_df["value"], min_level, max_level, out=None)
-            min_value = values_df.min()
-            max_value = values_df.max()
+            min_value = np.nanmin(values_df)
+            max_value = np.nanmax(values_df)
             scaled_marker_size = (max_marker_area-min_marker_area)*(scatter_df["value"]-min_value)/(max_value-min_value) + min_marker_area
             scaled_marker_size = scaled_marker_size*scaled_marker_size
             # s = 5000 / scatter_df.shape[0]
