@@ -31,7 +31,7 @@ def main():
     coords = sample_coords.get("coords")
     dim_names = sample_coords.get("dimNames")
 
-    for gene_id in gene_ids.split(",")
+    for gene_id in gene_ids.split(',')
         gene_id = gene_id.strip()
         if gene_id in df.index:
 
