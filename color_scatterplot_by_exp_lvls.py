@@ -34,6 +34,7 @@ def main():
     for gene_id in gene_ids.split(','):
         gene_id = gene_id.strip()
         if gene_id in df.index:
+            plt.clf()
 
             transposed_df = df.T
 
@@ -56,7 +57,7 @@ def main():
             plt.ylabel(dim_names[1])
             plt.tight_layout()
 
-            gn.add_current_figure_to_results("Scatter-plot", dpi=75)
+            gn.add_current_figure_to_results("Scatter-plot of {} expression".format(gene_id), dpi=75)
 
             gn.commit()
 
