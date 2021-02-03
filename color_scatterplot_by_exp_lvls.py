@@ -27,6 +27,8 @@ def main():
     min_level = gn.get_arg("min_level")
     max_level = gn.get_arg("max_level")
     convert_to_zscore = gn.get_arg("convert_to_zscore")
+    min_marker_area = gn.get_arg("min_marker_area")
+    max_marker_area = gn.get_arg("max_marker_area")
 
     coords = sample_coords.get("coords")
     dim_names = sample_coords.get("dimNames")
@@ -50,7 +52,13 @@ def main():
                     {"x": [a[0] for a in coords.values()], "y": [a[1] for a in coords.values()], "value": df.loc[gene_id, :]},
                     index=coords.keys())
 
-            plt.scatter(x=scatter_df["x"], y=scatter_df["y"], s=5000 / scatter_df.shape[0], c=np.clip(scatter_df["value"], min_level, max_level, out=None), cmap=LinearSegmentedColormap("fire", cdict, N=256)) #Amp_3.mpl_colormap)
+            values_df = np.clip(scatter_df["value"], min_level, max_level, out=None)
+            min_value = values_df.min()
+            max_value = values_df.max()
+            scaled_marker_size = (max_marker_area-min_marker_area)*(scatter_df["value"]-min_value)/(max_value-min_value) + min_marker_area
+            scaled_marker_size = scaled_marker_size*scaled_marker_size
+            # s = 5000 / scatter_df.shape[0]
+            plt.scatter(x=scatter_df["x"], y=scatter_df["y"], s=scaled_marker_size, alpha=0.6, c=values_df, cmap=LinearSegmentedColormap("fire", cdict, N=256)) #Amp_3.mpl_colormap)
             plt.colorbar()
 
             plt.xlabel(dim_names[0])
