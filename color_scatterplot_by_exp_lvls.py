@@ -23,7 +23,7 @@ def main():
 
     sample_coords = gn.get_import("viz_data")
     df = gn.pandas_from_assay(gn.get_import("assay"))
-    gene_ids = gn.get_arg("gene_id")
+    gene_ids = gn.get_arg("gene_ids")
     min_level = gn.get_arg("min_level")
     max_level = gn.get_arg("max_level")
     convert_to_zscore = gn.get_arg("convert_to_zscore")

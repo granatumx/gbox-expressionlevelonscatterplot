@@ -20,9 +20,9 @@ frontend:
       injectInto: viz_data
   args:
     - type: text
-      injectInto: gene_id
-      label: The gene ID to use for coloring
-      description: Must be a gene ID appearing in the assay selected.
+      injectInto: gene_ids
+      label: The gene ID (s) to use for coloring (comma separated: XIST, GAS7)
+      description: Must be gene IDs appearing in the assay selected.
       default: ''
     - type: number
       injectInto: min_level
