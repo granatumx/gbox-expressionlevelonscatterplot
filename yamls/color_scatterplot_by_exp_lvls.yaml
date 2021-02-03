@@ -36,3 +36,7 @@ frontend:
       description: All values greater are clipped to this value
       default: 999999.0
       step: 0.1
+    - type: checkbox
+      label: Convert expression levels to z-score first
+      default: true
+      injectInto: convert_to_zscore

@@ -23,42 +23,53 @@ def main():
 
     sample_coords = gn.get_import("viz_data")
     df = gn.pandas_from_assay(gn.get_import("assay"))
-    gene_id = gn.get_arg("gene_id")
+    gene_ids = gn.get_arg("gene_id")
     min_level = gn.get_arg("min_level")
     max_level = gn.get_arg("max_level")
+    convert_to_zscore = gn.get_arg("convert_to_zscore")
 
     coords = sample_coords.get("coords")
     dim_names = sample_coords.get("dimNames")
 
-    if gene_id in df.index:
+    for gene_id in gene_ids.split(",")
+        gene_id = gene_id.strip()
+        if gene_id in df.index:
 
-        scatter_df = pd.DataFrame(
-            {"x": [a[0] for a in coords.values()], "y": [a[1] for a in coords.values()], "value": df.loc[gene_id, :]},
-            index=coords.keys(),
-        )
+            transposed_df = df.T
 
-        plt.scatter(x=scatter_df["x"], y=scatter_df["y"], s=5000 / scatter_df.shape[0], c=np.clip(scatter_df["value"], min_level, max_level, out=None), cmap=LinearSegmentedColormap("fire", cdict, N=256)) #Amp_3.mpl_colormap)
-        plt.colorbar()
+            mean = transposed_df[gene_id].mean()
+            stdev = transposed_df[gene_id].std(ddof=0)
 
-        plt.xlabel(dim_names[0])
-        plt.ylabel(dim_names[1])
-        plt.tight_layout()
+            if convert_to_zscore:
+                scatter_df = pd.DataFrame(
+                    {"x": [a[0] for a in coords.values()], "y": [a[1] for a in coords.values()], "value": (df.loc[gene_id, :]-mean)/stdev},
+                    index=coords.keys())
+            else:
+                scatter_df = pd.DataFrame(
+                    {"x": [a[0] for a in coords.values()], "y": [a[1] for a in coords.values()], "value": df.loc[gene_id, :]},
+                    index=coords.keys())
 
-        gn.add_current_figure_to_results("Scatter-plot", dpi=75)
+            plt.scatter(x=scatter_df["x"], y=scatter_df["y"], s=5000 / scatter_df.shape[0], c=np.clip(scatter_df["value"], min_level, max_level, out=None), cmap=LinearSegmentedColormap("fire", cdict, N=256)) #Amp_3.mpl_colormap)
+            plt.colorbar()
 
-        gn.commit()
+            plt.xlabel(dim_names[0])
+            plt.ylabel(dim_names[1])
+            plt.tight_layout()
 
-    else:
+            gn.add_current_figure_to_results("Scatter-plot", dpi=75)
+
+            gn.commit()
+
+        else:
 
         # if the gene ID entered is not present in the assay
         # Communicate it to the user and output a table of available gene ID's
         
-        description = 'The selected gene is not present in the assay. See the step that generated the assay'
-        genes_in_assay = pd.DataFrame(df.index.tolist(), columns=['Gene unavailable in assay: choose from below'])
-        gn.add_pandas_df(genes_in_assay, description)
+            description = 'The selected gene is not present in the assay. See the step that generated the assay'
+            genes_in_assay = pd.DataFrame(df.index.tolist(), columns=['Gene unavailable in assay: choose from below'])
+            gn.add_pandas_df(genes_in_assay, description)
 
-        gn.commit()
-
+            gn.commit()
 
 if __name__ == "__main__":
     # Try except block to send an email about error #
