@@ -65,7 +65,14 @@ def main():
     else:
         cmaps = cmaps + [LinearSegmentedColormap("fire", cdict, N=256)]
 
-    fig, ax = plt.subplots(2, 1)
+    colorbar_height = 50
+    plot_height = 650
+    num_cbars = 1
+    if overlay_genes:
+        num_cbars = len(gene_ids.split(','))
+    cbar_height_ratio = plot_height/(num_cbars*colorbar_height)
+    fig, ax = plt.subplots(1+num_cbars, 1, gridspec_kw={'width_ratios': [cbar_height_ratio] + [1]*num_cbars})
+
     gene_index = -1
     for gene_id in gene_ids.split(','):
         gene_id = gene_id.strip()
@@ -96,7 +103,7 @@ def main():
             scaled_marker_size = scaled_marker_size*scaled_marker_size
             # s = 5000 / scatter_df.shape[0]
             scatter = ax[0].scatter(x=scatter_df["x"], y=scatter_df["y"], s=scaled_marker_size, c=values_df, cmap=cmaps[gene_index % len(cmaps)]) #Amp_3.mpl_colormap)
-            cbar = fig.colorbar(scatter, cax=ax[1], orientation='horizontal', aspect=40)
+            cbar = fig.colorbar(scatter, cax=ax[1+(gene_index%num_cbars)], orientation='horizontal', aspect=40)
             cbar.set_label(gene_id, rotation=0)
 
             ax[0].set_xlabel(dim_names[0])
