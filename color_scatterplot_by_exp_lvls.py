@@ -117,7 +117,7 @@ def main():
             gn.add_pandas_df(genes_in_assay, description)
     if overlay_genes:
         plt.tight_layout()
-        gn.add_current_figure_to_results("Scatter-plot of {} expression".format(gene_ids), dpi=75)
+        gn.add_current_figure_to_results("Scatter-plot of {} expression".format(gene_ids), height=650+100*len(gene_ids.split(',')), dpi=75)
 
     gn.commit()
 
