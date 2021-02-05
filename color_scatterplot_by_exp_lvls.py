@@ -95,7 +95,7 @@ def main():
             scaled_marker_size = scaled_marker_size*scaled_marker_size
             # s = 5000 / scatter_df.shape[0]
             plt.scatter(x=scatter_df["x"], y=scatter_df["y"], s=scaled_marker_size, c=values_df, cmap=cmaps[gene_index % len(cmaps)]) #Amp_3.mpl_colormap)
-            cbar = plt.colorbar(orientation='horizontal', pad=0.05, fraction=0.00)
+            cbar = plt.colorbar(orientation='horizontal', pad=0.05)
             cbar.set_label(gene_id, rotation=0)
 
             plt.xlabel(dim_names[0])
