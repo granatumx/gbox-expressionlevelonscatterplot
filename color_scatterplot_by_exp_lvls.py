@@ -65,7 +65,7 @@ def main():
     else:
         cmaps = cmaps + [LinearSegmentedColormap("fire", cdict, N=256)]
 
-    colorbar_height = 50
+    colorbar_height = 10
     plot_height = 650
     num_cbars = 1
     if overlay_genes:
