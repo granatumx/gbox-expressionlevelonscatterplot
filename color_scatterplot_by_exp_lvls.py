@@ -63,7 +63,12 @@ def main():
                 cmaps = cmaps + [LinearSegmentedColormap("fire", produce_cdict(col, grey=grey_level, min_alpha=min_alpha, max_alpha=max_alpha), N=256)]
 
     else:
-        cmaps = cmaps + [LinearSegmentedColormap("fire", cdict, N=256)]
+        if max_colors == "":
+            cmaps = cmaps + [LinearSegmentedColormap("fire", cdict, N=256)]
+        else:
+            for col in max_colors.split(','):
+                col = col.strip()
+                cmaps = cmaps + [LinearSegmentedColormap("fire", produce_cdict(col, grey=grey_level, min_alpha=min_alpha, max_alpha=max_alpha), N=256)]
 
     colorbar_height = 10
     plot_height = 650
