@@ -99,8 +99,8 @@ def main():
             cbar = fig.colorbar(scatter, ax=ax[1], orientation='horizontal', aspect=40)
             cbar.set_label(gene_id, rotation=0)
 
-            ax.set_xlabel(dim_names[0])
-            ax.set_ylabel(dim_names[1])
+            ax[0].set_xlabel(dim_names[0])
+            ax[0].set_ylabel(dim_names[1])
 
             if not overlay_genes:
                 gn.add_current_figure_to_results("Scatter-plot of {} expression".format(gene_id), dpi=75)
