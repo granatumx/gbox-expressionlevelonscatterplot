@@ -80,7 +80,7 @@ def main():
         if gene_id in df.index:
             if not overlay_genes:
                 plt.clf()
-                fig, ax = plt.subplots(2, 1)
+                fig, ax = plt.subplots(1+num_cbars, 1, gridspec_kw={'height_ratios': [cbar_height_ratio] + [1]*num_cbars})
 
             transposed_df = df.T
 
