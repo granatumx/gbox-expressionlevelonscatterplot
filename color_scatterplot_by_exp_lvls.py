@@ -65,7 +65,7 @@ def main():
     else:
         cmaps = cmaps + [LinearSegmentedColormap("fire", cdict, N=256)]
 
-    plt.clf()
+    fig, ax = plt.subplots()
     gene_index = -1
     for gene_id in gene_ids.split(','):
         gene_id = gene_id.strip()
@@ -73,6 +73,7 @@ def main():
         if gene_id in df.index:
             if not overlay_genes:
                 plt.clf()
+                fig, ax = plt.subplots()
 
             transposed_df = df.T
 
@@ -94,16 +95,14 @@ def main():
             scaled_marker_size = (max_marker_area-min_marker_area)*(scatter_df["value"]-min_value)/(max_value-min_value) + min_marker_area
             scaled_marker_size = scaled_marker_size*scaled_marker_size
             # s = 5000 / scatter_df.shape[0]
-            plt.scatter(x=scatter_df["x"], y=scatter_df["y"], s=scaled_marker_size, c=values_df, cmap=cmaps[gene_index % len(cmaps)]) #Amp_3.mpl_colormap)
-            cbar = plt.colorbar(orientation='horizontal', pad=0.1, aspect=40)
+            ax.scatter(x=scatter_df["x"], y=scatter_df["y"], s=scaled_marker_size, c=values_df, cmap=cmaps[gene_index % len(cmaps)]) #Amp_3.mpl_colormap)
+            cbar = fig.colorbar(orientation='horizontal', pad=0.1, aspect=40)
             cbar.set_label(gene_id, rotation=0)
 
-            plt.xlabel(dim_names[0])
-            plt.ylabel(dim_names[1])
+            ax.set_xlabel(dim_names[0])
+            ax.set_ylabel(dim_names[1])
 
             if not overlay_genes:
-                plt.tight_layout()
-
                 gn.add_current_figure_to_results("Scatter-plot of {} expression".format(gene_id), dpi=75)
 
 
@@ -116,7 +115,6 @@ def main():
             genes_in_assay = pd.DataFrame(df.index.tolist(), columns=['Gene unavailable in assay: choose from below'])
             gn.add_pandas_df(genes_in_assay, description)
     if overlay_genes:
-        plt.tight_layout()
         gn.add_current_figure_to_results("Scatter-plot of {} expression".format(gene_ids), height=650+100*len(gene_ids.split(',')), dpi=75)
 
     gn.commit()
