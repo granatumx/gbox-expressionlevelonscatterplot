@@ -24,6 +24,14 @@ frontend:
       label: The gene ID (s) to use for coloring (comma separated... XIST, GAS7)
       description: Must be gene IDs appearing in the assay selected.
       default: ''
+    - type: checkbox
+      label: Overlay genes on the same graph
+      default: true
+      injectInto: overlay_genes
+    - type: text
+      label: Max colors for each gene (in same order as the gene ids, and comma separated... red, green, purple)
+      default: true
+      injectInto: max_colors
     - type: number
       injectInto: min_level
       label: The minimum level on the plot 
@@ -44,7 +52,7 @@ frontend:
       injectInto: min_marker_area
       label: The minimum marker size on the plot in pixels
       description: When plotting the marker, the minimum value in the legend will correspond to this minimum size
-      default: 2.0
+      default: 1.0
       step: 0.1
     - type: number
       injectInto: max_marker_area

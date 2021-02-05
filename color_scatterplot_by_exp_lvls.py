@@ -7,6 +7,8 @@ import numpy as np
 from granatum_sdk import Granatum
 from palettable.cmocean.sequential import Amp_3
 from matplotlib.colors import LinearSegmentedColormap
+from matplotlib import colors
+from itertools import cycle
 
 import os
 import traceback
@@ -18,12 +20,24 @@ COLORS = ["#3891ea", "#29ad19", "#ac2d58", "#db7580", "#ed2310", "#ca2dc2", "#5f
 
 cdict = {'red':   [(0.0,   0.86, 0.86), (0.192, 0.95, 0.95), (0.385, 0.95, 0.95), (0.577, 0.88, 0.88), (1.0,   0.7,  0.7)], 'green': [(0.0,   0.86, 0.86), (0.192, 0.77, 0.77), (0.385, 0.64, 0.64), (0.577, 0.45, 0.45), (1.0,   0.04,  0.04)], 'blue':  [(0.0,   0.86, 0.86), (0.192, 0.63, 0.63), (0.385, 0.43, 0.43), (0.577, 0.32, 0.32), (1.0,   0.1,  0.1)]}
 
+def produce_cdict(color_name, grey=0.9, min_alpha=0.2, max_alpha=1.0):
+    clist = colors.to_rgba(color_name)
+    g = grey
+    return {
+            'red': [(0.0, g, g), (0.2, g, g), (1.0, clist[0], clist[0])],
+            'green': [(0.0, g, g), (0.2, g, g), (1.0, clist[1], clist[1])],
+            'blue': [(0.0, g, g), (0.2, g, g), (1.0, clist[2], clist[2])],
+            'alpha': [(0.0, min_alpha, min_alpha), (0.2, min_alpha, min_alpha), (1.0, max_alpha, max_alpha)]
+            }
+
 def main():
     gn = Granatum()
 
     sample_coords = gn.get_import("viz_data")
     df = gn.pandas_from_assay(gn.get_import("assay"))
     gene_ids = gn.get_arg("gene_ids")
+    overlay_genes = gn.get_arg("overlay_genes")
+    max_colors = gn.get_arg("max_colors")
     min_level = gn.get_arg("min_level")
     max_level = gn.get_arg("max_level")
     convert_to_zscore = gn.get_arg("convert_to_zscore")
@@ -33,10 +47,29 @@ def main():
     coords = sample_coords.get("coords")
     dim_names = sample_coords.get("dimNames")
 
+    cmaps = []
+    if overlay_genes:
+        if max_colors == "":
+            numcolors = len(gene_ids.split(','))
+            cycol = cycle('bgrcmk')
+            for i in range(numcolors):
+                cmaps = cmaps + [LinearSegmentedColormap("fire", produce_cdict(next(cycol)), N=256)]
+        else:
+            for col in max_colors.split(','):
+                col = col.strip()
+                cmaps = cmaps + [LinearSegmentedColormap("fire", produce_cdict(next(col)), N=256)]
+
+    else:
+        cmaps = cmaps + [LinearSegmentedColormap("fire", cdict, N=256)]
+
+    plt.clf()
+    gene_index = -1
     for gene_id in gene_ids.split(','):
         gene_id = gene_id.strip()
+        gene_index = gene_index + 1
         if gene_id in df.index:
-            plt.clf()
+            if not overlay_genes:
+                plt.clf()
 
             transposed_df = df.T
 
@@ -58,16 +91,18 @@ def main():
             scaled_marker_size = (max_marker_area-min_marker_area)*(scatter_df["value"]-min_value)/(max_value-min_value) + min_marker_area
             scaled_marker_size = scaled_marker_size*scaled_marker_size
             # s = 5000 / scatter_df.shape[0]
-            plt.scatter(x=scatter_df["x"], y=scatter_df["y"], s=scaled_marker_size, alpha=0.6, c=values_df, cmap=LinearSegmentedColormap("fire", cdict, N=256)) #Amp_3.mpl_colormap)
-            plt.colorbar()
+            plt.scatter(x=scatter_df["x"], y=scatter_df["y"], s=scaled_marker_size, c=values_df, label=gene_id, cmap=cmaps[gene_index % len(cmaps)]) #Amp_3.mpl_colormap)
+            if not overlay_genes:
+                plt.colorbar()
 
             plt.xlabel(dim_names[0])
             plt.ylabel(dim_names[1])
-            plt.tight_layout()
 
-            gn.add_current_figure_to_results("Scatter-plot of {} expression".format(gene_id), dpi=75)
+            if not overlay_genes:
+                plt.tight_layout()
 
-            gn.commit()
+                gn.add_current_figure_to_results("Scatter-plot of {} expression".format(gene_id), dpi=75)
+
 
         else:
 
@@ -77,8 +112,12 @@ def main():
             description = 'The selected gene is not present in the assay. See the step that generated the assay'
             genes_in_assay = pd.DataFrame(df.index.tolist(), columns=['Gene unavailable in assay: choose from below'])
             gn.add_pandas_df(genes_in_assay, description)
+    if overlay_genes:
+        plt.colorbar()
+        plt.tight_layout()
+        gn.add_current_figure_to_results("Scatter-plot of {} expression".format(gene_ids), dpi=75)
 
-            gn.commit()
+    gn.commit()
 
 if __name__ == "__main__":
     # Try except block to send an email about error #
