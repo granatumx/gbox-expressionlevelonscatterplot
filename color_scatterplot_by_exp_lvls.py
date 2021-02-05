@@ -71,7 +71,7 @@ def main():
     if overlay_genes:
         num_cbars = len(gene_ids.split(','))
     cbar_height_ratio = plot_height/(num_cbars*colorbar_height)
-    fig, ax = plt.subplots(1+num_cbars, 1, gridspec_kw={'width_ratios': [cbar_height_ratio] + [1]*num_cbars})
+    fig, ax = plt.subplots(1+num_cbars, 1, gridspec_kw={'height_ratios': [cbar_height_ratio] + [1]*num_cbars})
 
     gene_index = -1
     for gene_id in gene_ids.split(','):
