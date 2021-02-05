@@ -43,6 +43,9 @@ def main():
     convert_to_zscore = gn.get_arg("convert_to_zscore")
     min_marker_area = gn.get_arg("min_marker_area")
     max_marker_area = gn.get_arg("max_marker_area")
+    min_alpha = gn.get_arg("min_alpha")
+    max_alpha = gn.get_arg("max_alpha")
+    grey_level = gn.get_arg("grey_level")
 
     coords = sample_coords.get("coords")
     dim_names = sample_coords.get("dimNames")
@@ -53,11 +56,11 @@ def main():
             numcolors = len(gene_ids.split(','))
             cycol = cycle('bgrcmk')
             for i in range(numcolors):
-                cmaps = cmaps + [LinearSegmentedColormap("fire", produce_cdict(next(cycol)), N=256)]
+                cmaps = cmaps + [LinearSegmentedColormap("fire", produce_cdict(next(cycol), grey=grey_level, min_alpha=min_alpha, max_alpha=max_alpha), N=256)]
         else:
             for col in max_colors.split(','):
                 col = col.strip()
-                cmaps = cmaps + [LinearSegmentedColormap("fire", produce_cdict(next(col)), N=256)]
+                cmaps = cmaps + [LinearSegmentedColormap("fire", produce_cdict(col, grey=grey_level, min_alpha=min_alpha, max_alpha=max_alpha), N=256)]
 
     else:
         cmaps = cmaps + [LinearSegmentedColormap("fire", cdict, N=256)]
