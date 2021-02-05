@@ -94,8 +94,9 @@ def main():
             scaled_marker_size = (max_marker_area-min_marker_area)*(scatter_df["value"]-min_value)/(max_value-min_value) + min_marker_area
             scaled_marker_size = scaled_marker_size*scaled_marker_size
             # s = 5000 / scatter_df.shape[0]
-            plt.scatter(x=scatter_df["x"], y=scatter_df["y"], s=scaled_marker_size, c=values_df, label=gene_id, cmap=cmaps[gene_index % len(cmaps)]) #Amp_3.mpl_colormap)
-            plt.colorbar()
+            plt.scatter(x=scatter_df["x"], y=scatter_df["y"], s=scaled_marker_size, c=values_df, cmap=cmaps[gene_index % len(cmaps)]) #Amp_3.mpl_colormap)
+            cbar = plt.colorbar()
+            cbar.set_label(gene_id, rotation=270)
 
             plt.xlabel(dim_names[0])
             plt.ylabel(dim_names[1])
