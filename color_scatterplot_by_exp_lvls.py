@@ -92,8 +92,7 @@ def main():
             scaled_marker_size = scaled_marker_size*scaled_marker_size
             # s = 5000 / scatter_df.shape[0]
             plt.scatter(x=scatter_df["x"], y=scatter_df["y"], s=scaled_marker_size, c=values_df, label=gene_id, cmap=cmaps[gene_index % len(cmaps)]) #Amp_3.mpl_colormap)
-            if not overlay_genes:
-                plt.colorbar()
+            plt.colorbar()
 
             plt.xlabel(dim_names[0])
             plt.ylabel(dim_names[1])
@@ -113,7 +112,6 @@ def main():
             genes_in_assay = pd.DataFrame(df.index.tolist(), columns=['Gene unavailable in assay: choose from below'])
             gn.add_pandas_df(genes_in_assay, description)
     if overlay_genes:
-        plt.colorbar()
         plt.tight_layout()
         gn.add_current_figure_to_results("Scatter-plot of {} expression".format(gene_ids), dpi=75)
 
