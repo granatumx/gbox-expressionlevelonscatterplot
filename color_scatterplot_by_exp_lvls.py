@@ -65,7 +65,7 @@ def main():
     else:
         cmaps = cmaps + [LinearSegmentedColormap("fire", cdict, N=256)]
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(2, 1)
     gene_index = -1
     for gene_id in gene_ids.split(','):
         gene_id = gene_id.strip()
@@ -73,7 +73,7 @@ def main():
         if gene_id in df.index:
             if not overlay_genes:
                 plt.clf()
-                fig, ax = plt.subplots()
+                fig, ax = plt.subplots(2, 1)
 
             transposed_df = df.T
 
@@ -95,8 +95,8 @@ def main():
             scaled_marker_size = (max_marker_area-min_marker_area)*(scatter_df["value"]-min_value)/(max_value-min_value) + min_marker_area
             scaled_marker_size = scaled_marker_size*scaled_marker_size
             # s = 5000 / scatter_df.shape[0]
-            scatter = ax.scatter(x=scatter_df["x"], y=scatter_df["y"], s=scaled_marker_size, c=values_df, cmap=cmaps[gene_index % len(cmaps)]) #Amp_3.mpl_colormap)
-            cbar = fig.colorbar(scatter, ax=ax, use_gridspec=True, orientation='horizontal', aspect=40)
+            scatter = ax[0].scatter(x=scatter_df["x"], y=scatter_df["y"], s=scaled_marker_size, c=values_df, cmap=cmaps[gene_index % len(cmaps)]) #Amp_3.mpl_colormap)
+            cbar = fig.colorbar(scatter, ax=ax[1], orientation='horizontal', aspect=40)
             cbar.set_label(gene_id, rotation=0)
 
             ax.set_xlabel(dim_names[0])
