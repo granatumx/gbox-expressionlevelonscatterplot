@@ -30,7 +30,7 @@ frontend:
       injectInto: overlay_genes
     - type: text
       label: Max colors for each gene (in same order as the gene ids, and comma separated... red, green, purple)
-      default: true
+      default: ''
       injectInto: max_colors
     - type: number
       injectInto: min_level
