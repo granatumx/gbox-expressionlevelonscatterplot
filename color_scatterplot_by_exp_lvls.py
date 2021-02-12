@@ -104,7 +104,7 @@ def main():
             values_df = np.clip(scatter_df["value"], min_level, max_level, out=None)
             min_value = np.nanmin(values_df)
             max_value = np.nanmax(values_df)
-            scaled_marker_size = (max_marker_area-min_marker_area)*(scatter_df["value"]-min_value)/(max_value-min_value) + min_marker_area
+            scaled_marker_size = (max_marker_area-min_marker_area)*(values_df-min_value)/(max_value-min_value) + min_marker_area
             scaled_marker_size = scaled_marker_size*scaled_marker_size
             # s = 5000 / scatter_df.shape[0]
             scatter = ax[0].scatter(x=scatter_df["x"], y=scatter_df["y"], s=scaled_marker_size, c=values_df, cmap=cmaps[gene_index % len(cmaps)]) #Amp_3.mpl_colormap)
