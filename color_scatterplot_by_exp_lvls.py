@@ -138,6 +138,7 @@ def main():
                 cbar.ax.set_ylabel(gene_id, rotation=0)
                 cax.yaxis.set_label_coords(0.08, 0.0)
 
+                ax.xaxis.set_tick_params(labeltop=False)
                 ax.xaxis.set_tick_params(labelbottom=False)
                 ax.yaxis.set_tick_params(labelleft=False)
                 ax.grid(False)
@@ -145,7 +146,7 @@ def main():
             if merge_genes:
                 if gene_index == numgenes - 1:
                     cax.tick_params(axis="x",direction="inout", pad=-1)
-                    gn.add_current_figure_to_results("Scatter-plot of {} expression".format(gene_id), dpi=75)
+                    gn.add_current_figure_to_results("Scatter-plot of {} expression".format(gene_ids), dpi=75)
             elif not overlay_genes:
                 cax.tick_params(axis="x",direction="inout", pad=-1)
                 gn.add_current_figure_to_results("Scatter-plot of {} expression".format(gene_id), dpi=75)
