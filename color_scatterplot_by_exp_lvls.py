@@ -51,6 +51,8 @@ def main():
 
     coords = sample_coords.get("coords")
     dim_names = sample_coords.get("dimNames")
+    if merge_genes:
+        overlay_genes = False
 
     cmaps = []
     if overlay_genes and not merge_genes:         # Multiple colors required
@@ -135,7 +137,10 @@ def main():
                 ax.set_xlabel(dim_names[0])
                 ax.set_ylabel(dim_names[1])
 
-                cbar.ax.set_ylabel(gene_id, rotation=0)
+                if merge_genes:
+                    cbar.ax.set_ylabel("{}".format(gene_ids), rotation=0)
+                else:
+                    cbar.ax.set_ylabel(gene_id, rotation=0)
                 cax.yaxis.set_label_coords(0.08, 0.0)
 
                 ax.xaxis.set_tick_params(labeltop=False)
