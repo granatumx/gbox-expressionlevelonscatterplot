@@ -92,11 +92,12 @@ def main():
     # Only do merge_genes plot at the end
     for gene_id in gene_ids.split(','):
         gene_id = gene_id.strip()
-        gene_ids = gene_id.split("=")
-        if len(gene_ids) > 1:
-            scale = float(gene_ids[1])
+        gene_ids_equal = gene_id.split("=")
+        if len(gene_ids_equal) > 1:
+            scale = float(gene_ids_equal[1])
         else:
             scale = 1.0/numgenes 
+        gene_id = gene_ids_equal[0]
         gene_index = gene_index + 1
         if gene_id in df.index:
             # Data preparation
