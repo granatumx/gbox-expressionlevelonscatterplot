@@ -21,13 +21,17 @@ frontend:
   args:
     - type: text
       injectInto: gene_ids
-      label: The gene ID (s) to use for coloring (comma separated... XIST, GAS7)
+      label: The gene ID (s) to use for coloring (comma separated... XIST, GAS7), can also give weights (e.g., XIST=0.1, GAS7=-1.0) for scaling data (default is assumed to be 1.0)
       description: Must be gene IDs appearing in the assay selected.
       default: ''
     - type: checkbox
       label: Overlay genes on the same graph
       default: true
       injectInto: overlay_genes
+    - type: checkbox
+      label: Merge sum of gene expressions on same graph (weights assumed to be 1.0 if not specified)
+      default: false
+      injectInto: merge_genes
     - type: text
       label: Max colors for each gene (in same order as the gene ids, and comma separated... red, green, purple)
       default: ''

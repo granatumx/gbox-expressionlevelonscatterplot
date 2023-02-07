@@ -3,6 +3,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 from granatum_sdk import Granatum
 from palettable.cmocean.sequential import Amp_3
@@ -37,6 +38,7 @@ def main():
     df = gn.pandas_from_assay(gn.get_import("assay"))
     gene_ids = gn.get_arg("gene_ids")
     overlay_genes = gn.get_arg("overlay_genes")
+    merge_genes = gn.get_arg("merge_genes")
     max_colors = gn.get_arg("max_colors")
     min_level = gn.get_arg("min_level")
     max_level = gn.get_arg("max_level")
@@ -51,7 +53,7 @@ def main():
     dim_names = sample_coords.get("dimNames")
 
     cmaps = []
-    if overlay_genes:
+    if overlay_genes and not merge_genes:         # Multiple colors required
         if max_colors == "":
             numcolors = len(gene_ids.split(','))
             cycol = cycle('bgrcmk')
@@ -76,30 +78,46 @@ def main():
     if overlay_genes:
         num_cbars = len(gene_ids.split(','))
     cbar_height_ratio = plot_height/(num_cbars*colorbar_height)
-    fig, ax = plt.subplots(1+num_cbars, 1, gridspec_kw={'height_ratios': [cbar_height_ratio] + [1]*num_cbars})
+    fig, ax = plt.subplots() # plt.subplots(1+num_cbars, 1, gridspec_kw={'height_ratios': [cbar_height_ratio] + [1]*num_cbars})
+    ax.xaxis.set_label_position("top")
+    ax.xaxis.tick_top()
+    divider = make_axes_locatable(ax)
 
     gene_index = -1
+    numgenes = len(gene_ids.split(',')
+    scales = {}
+    transposed_df = df.T
+
+    merge_scatters = []  # will be the list of scatter_dfs to merge
+
+    # Only do merge_genes plot at the end
     for gene_id in gene_ids.split(','):
         gene_id = gene_id.strip()
+        gene_ids = gene_id.split("=")
+        if len(gene_ids) > 1:
+            scale = float(gene_ids[1])
+        else:
+            scale = 1.0/numgenes 
         gene_index = gene_index + 1
         if gene_id in df.index:
-            if not overlay_genes:
-                plt.clf()
-                fig, ax = plt.subplots(1+num_cbars, 1, gridspec_kw={'height_ratios': [cbar_height_ratio] + [1]*num_cbars})
-
-            transposed_df = df.T
-
-            mean = transposed_df[gene_id].mean()
-            stdev = transposed_df[gene_id].std(ddof=0)
-
-            if convert_to_zscore:
-                scatter_df = pd.DataFrame(
-                    {"x": [a[0] for a in coords.values()], "y": [a[1] for a in coords.values()], "value": (df.loc[gene_id, :]-mean)/stdev},
-                    index=coords.keys())
+            # Data preparation
+            if merge_genes and gene_index < numgenes - 1:
+                merge_scatters.append(df.loc[gene_id, :])
+                continue
             else:
-                scatter_df = pd.DataFrame(
-                    {"x": [a[0] for a in coords.values()], "y": [a[1] for a in coords.values()], "value": df.loc[gene_id, :]},
-                    index=coords.keys())
+                if merge_genes:
+                    values = pd.concat(merge_scatters, axis=1).sum(axis=1) * scale
+                else:
+                    values = transposed_df[gene_id] * scale
+                values = (values - values.mean()) / values.std(ddof=0) if convert_to_zscore else values
+                scatter_df = pd.DataFrame({"x": [a[0] for a in coords.values()], "y": [a[1] for a in coords.values()], "value": values}, index=coords.keys())
+
+            if not overlay_genes:     # New gene appears in separate plot
+                plt.clf()
+                fig, ax = plt.subplots()  # plt.subplots(1+num_cbars, 1, gridspec_kw={'height_ratios': [cbar_height_ratio] + [1]*num_cbars})
+                ax.xaxis.set_label_position("top")
+                ax.xaxis.tick_top()
+                divider = make_axes_locatable(ax)
 
             values_df = np.clip(scatter_df["value"], min_level, max_level, out=None)
             min_value = np.nanmin(values_df)
@@ -107,22 +125,39 @@ def main():
             scaled_marker_size = (max_marker_area-min_marker_area)*(values_df-min_value)/(max_value-min_value) + min_marker_area
             scaled_marker_size = scaled_marker_size*scaled_marker_size
             # s = 5000 / scatter_df.shape[0]
-            scatter = ax[0].scatter(x=scatter_df["x"], y=scatter_df["y"], s=scaled_marker_size, c=values_df, cmap=cmaps[gene_index % len(cmaps)]) #Amp_3.mpl_colormap)
-            cbar = fig.colorbar(scatter, cax=ax[1+(gene_index%num_cbars)], orientation='horizontal', aspect=40)
-            cbar.set_label(gene_id, rotation=0)
+            if not (merge_genes and gene_index < numgenes - 1):
+                scatter = ax[0].scatter(x=scatter_df["x"], y=scatter_df["y"], s=scaled_marker_size, c=values_df, cmap=cmaps[gene_index % len(cmaps)]) #Amp_3.mpl_colormap)
+                cax = divider.append_axes('bottom', size=0.15, pad=0.01)
+                cbar = fig.colorbar(scatter, cax=cax, orientation='horizontal', aspect=300)
+                #cbar = fig.colorbar(scatter, cax=ax[1+(gene_index%num_cbars)], orientation='horizontal', aspect=40)
+                #cbar.set_label(gene_id, rotation=0)
 
-            ax[0].set_xlabel(dim_names[0])
-            ax[0].set_ylabel(dim_names[1])
+                ax[0].set_xlabel(dim_names[0])
+                ax[0].set_ylabel(dim_names[1])
 
-            if not overlay_genes:
+                cbar.ax.set_ylabel(gene_ids_mapping[gene_index], rotation=0)
+                cax.yaxis.set_label_coords(0.08, 0.0)
+
+                ax.xaxis.set_tick_params(labelbottom=False)
+                ax.yaxis.set_tick_params(labelleft=False)
+                ax.grid(False)
+
+            if merge_genes:
+                if gene_index == numgenes - 1:
+                    cax.tick_params(axis="x",direction="inout", pad=-1)
+                    gn.add_current_figure_to_results("Scatter-plot of {} expression".format(gene_id), dpi=75)
+            else if not overlay_genes:
+                cax.tick_params(axis="x",direction="inout", pad=-1)
                 gn.add_current_figure_to_results("Scatter-plot of {} expression".format(gene_id), dpi=75)
-
-
+            else:
+                if gene_index < numgenes-1:
+                    cax.tick_params(axis="x",direction="in", pad=-1)
+                    cax.xaxis.set_ticklabels([])
+                else:
+                    cax.tick_params(axis="x",direction="inout", pad=-1)
         else:
-
-        # if the gene ID entered is not present in the assay
-        # Communicate it to the user and output a table of available gene ID's
-        
+            # if the gene ID entered is not present in the assay
+            # Communicate it to the user and output a table of available gene ID's
             description = 'The selected gene is not present in the assay. See the step that generated the assay'
             genes_in_assay = pd.DataFrame(df.index.tolist(), columns=['Gene unavailable in assay: choose from below'])
             gn.add_pandas_df(genes_in_assay, description)
