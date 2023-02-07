@@ -145,7 +145,7 @@ def main():
                 if gene_index == numgenes - 1:
                     cax.tick_params(axis="x",direction="inout", pad=-1)
                     gn.add_current_figure_to_results("Scatter-plot of {} expression".format(gene_id), dpi=75)
-            else if not overlay_genes:
+            elif not overlay_genes:
                 cax.tick_params(axis="x",direction="inout", pad=-1)
                 gn.add_current_figure_to_results("Scatter-plot of {} expression".format(gene_id), dpi=75)
             else:
