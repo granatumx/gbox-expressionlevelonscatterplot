@@ -84,8 +84,7 @@ def main():
     divider = make_axes_locatable(ax)
 
     gene_index = -1
-    numgenes = len(gene_ids.split(',')
-    scales = {}
+    numgenes = len(gene_ids.split(','))
     transposed_df = df.T
 
     merge_scatters = []  # will be the list of scatter_dfs to merge
