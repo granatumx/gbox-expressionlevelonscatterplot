@@ -137,9 +137,7 @@ def main():
                 ax.set_xlabel(dim_names[0])
                 ax.set_ylabel(dim_names[1])
 
-                if merge_genes:
-                    cbar.ax.set_ylabel("{}".format(gene_ids), rotation=0)
-                else:
+                if not merge_genes:
                     cbar.ax.set_ylabel(gene_id, rotation=0)
                 cax.yaxis.set_label_coords(0.08, 0.0)
 
