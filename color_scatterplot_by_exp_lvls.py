@@ -129,6 +129,7 @@ def main():
             # s = 5000 / scatter_df.shape[0]
             if not (merge_genes and gene_index < numgenes - 1):
                 scatter = ax.scatter(x=scatter_df["x"], y=scatter_df["y"], s=scaled_marker_size, c=values_df, cmap=cmaps[gene_index % len(cmaps)]) #Amp_3.mpl_colormap)
+
                 cax = divider.append_axes('bottom', size=0.15, pad=0.01)
                 cbar = fig.colorbar(scatter, cax=cax, orientation='horizontal', aspect=300)
                 #cbar = fig.colorbar(scatter, cax=ax[1+(gene_index%num_cbars)], orientation='horizontal', aspect=40)
@@ -139,7 +140,7 @@ def main():
 
                 if not merge_genes:
                     cbar.ax.set_ylabel(gene_id, rotation=0)
-                cax.yaxis.set_label_coords(0.08, 0.0)
+                    cax.yaxis.set_label_coords(0.08, 0.0)
 
                 ax.xaxis.set_tick_params(labeltop=False)
                 ax.xaxis.set_tick_params(labelbottom=False)
