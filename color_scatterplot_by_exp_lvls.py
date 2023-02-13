@@ -150,7 +150,7 @@ def main():
                 if labels is not None and overlay_genes:
                     msg = "* Percentages of each group expressing {} at threshold {} *".format(gene_id, threshold)
                     gn.add_result(msg, "markdown")
-                    show_percentages(gn, label_inv, values_df, threshold)
+                    show_percentages(gn, label_inv, values_df.to_frame(), threshold)
                 cax = divider.append_axes('bottom', size=0.15, pad=0.01)
                 cbar = fig.colorbar(scatter, cax=cax, orientation='horizontal', aspect=300)
                 #cbar = fig.colorbar(scatter, cax=ax[1+(gene_index%num_cbars)], orientation='horizontal', aspect=40)
@@ -175,14 +175,14 @@ def main():
                     if labels is not None:
                         msg = "* Percentages of each group expressing merge at threshold {} *".format(threshold)
                         gn.add_result(msg, "markdown")
-                        show_percentages(gn, label_inv, values_df, threshold)
+                        show_percentages(gn, label_inv, values_df.to_frame(), threshold)
             elif not overlay_genes:
                 cax.tick_params(axis="x",direction="inout", pad=-1)
                 gn.add_current_figure_to_results("Scatter-plot of {} expression".format(gene_id), dpi=75)
                 if labels is not None:
                     msg = "* Percentages of each group expressing {} at threshold {} *".format(gene_id, threshold)
                     gn.add_result(msg, "markdown")
-                    show_percentages(gn, label_inv, values_df, threshold)
+                    show_percentages(gn, label_inv, values_df.to_frame(), threshold)
             else:
                 if gene_index < numgenes-1:
                     cax.tick_params(axis="x",direction="in", pad=-1)
