@@ -38,7 +38,7 @@ def invert_dict(my_map):
     return inv_map
 
 def show_percentages(gn, invdict, values, threshold):
-    percent_df = pd.concat([((values.loc[v, :] >= threshold).sum()+0.0).to_frame().T/len(v) for k, v in invdict.items()], axis=0)
+    percent_df = pd.concat([((values.loc[v, :] >= threshold).sum()+0.0)/len(v) for k, v in invdict.items()], axis=0)
     percent_df.index = list(invdict.keys())
     gn.add_pandas_df(percent_df.reset_index())
 
