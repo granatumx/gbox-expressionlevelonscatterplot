@@ -40,6 +40,7 @@ def invert_dict(my_map):
 def show_percentages(gn, invdict, values, threshold):
     percent_df = pd.concat([((values.loc[v, :] >= threshold).sum()+0.0)/len(v) for k, v in invdict.items()], axis=0)
     gn.add_result(" * Shape = {} * ".format(percent_df.shape), "markdown")
+    gn.add_result(" * Values = {} * ".format(percent_df), "markdown")
     percent_df.index = list(invdict.keys())
     gn.add_pandas_df(percent_df.reset_index())
 
