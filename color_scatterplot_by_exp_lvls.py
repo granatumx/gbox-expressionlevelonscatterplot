@@ -147,7 +147,7 @@ def main():
             if not (merge_genes and gene_index < numgenes - 1):
                 scatter = ax.scatter(x=scatter_df["x"], y=scatter_df["y"], s=scaled_marker_size, c=values_df, cmap=cmaps[gene_index % len(cmaps)]) #Amp_3.mpl_colormap)
 
-                if labels is not None and not overlay_genes:
+                if labels is not None and overlay_genes:
                     msg = "* Percentages of each group expressing {} at threshold {} *".format(gene_id, threshold)
                     gn.add_result(msg, "markdown")
                     show_percentages(gn, label_inv, values_df, threshold)
