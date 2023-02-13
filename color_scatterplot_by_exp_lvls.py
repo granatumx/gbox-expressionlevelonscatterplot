@@ -39,8 +39,8 @@ def invert_dict(my_map):
 
 def show_percentages(gn, invdict, values, threshold):
     percent_df = pd.concat([((values.loc[v, :] >= threshold).sum()+0.0)/len(v) for k, v in invdict.items()], axis=0)
-    gn.add_result(" * Shape = {} * ".format(percent_df.shape), "markdown")
-    gn.add_result(" * Values = {} * ".format(percent_df), "markdown")
+    #gn.add_result(" * Shape = {} * ".format(percent_df.shape), "markdown")
+    #gn.add_result(" * Values = {} * ".format(percent_df), "markdown")
     percent_df.index = list(invdict.keys())
     gn.add_pandas_df(percent_df.reset_index())
 
@@ -71,7 +71,7 @@ def main():
 
     if labels is not None:
         label_inv = invert_dict(labels)
-        label_inv = {k:list(set(v).intersection(set(df.index))) for k, v in label_inv.items()}
+        label_inv = {k:list(set(v).intersection(set(df.columns))) for k, v in label_inv.items()}
 
     cmaps = []
     if overlay_genes and not merge_genes:         # Multiple colors required
