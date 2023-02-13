@@ -69,7 +69,7 @@ def main():
 
     if labels is not None:
         label_inv = invert_dict(labels)
-        label_inv = {k:list(set(v).intersection(set(df.index))) for k, v in label_inv}
+        label_inv = {k:list(set(v).intersection(set(df.index))) for k, v in label_inv.items()}
 
     cmaps = []
     if overlay_genes and not merge_genes:         # Multiple colors required
