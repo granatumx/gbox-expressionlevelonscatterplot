@@ -31,11 +31,23 @@ def produce_cdict(color_name, grey=0.9, min_alpha=0.2, max_alpha=1.0):
             'alpha': [(0.0, min_alpha, min_alpha), (0.2, min_alpha, min_alpha), (1.0, max_alpha, max_alpha)]
             }
 
+def invert_dict(my_map):
+    inv_map = {}
+    for k, v in my_map.items():
+        inv_map[v] = inv_map.get(v, []) + [k]
+    return inv_map
+
+def show_percentages(gn, invdict, values, threshold):
+    percent_df = pd.concat([values.loc[v, :] >= threshold).sum().to_frame().T/len(v) for k, v in invdict.items()], axis=0)
+    percent_df.index = list(invdict.keys())
+    gn.add_pandas_df(percent_df.reset_index())
+
 def main():
     gn = Granatum()
 
     sample_coords = gn.get_import("viz_data")
     df = gn.pandas_from_assay(gn.get_import("assay"))
+    labels = gn.get_import("labels")
     gene_ids = gn.get_arg("gene_ids")
     overlay_genes = gn.get_arg("overlay_genes")
     merge_genes = gn.get_arg("merge_genes")
@@ -48,11 +60,16 @@ def main():
     min_alpha = gn.get_arg("min_alpha")
     max_alpha = gn.get_arg("max_alpha")
     grey_level = gn.get_arg("grey_level")
+    threshold = gn.get_arg("threshold")
 
     coords = sample_coords.get("coords")
     dim_names = sample_coords.get("dimNames")
     if merge_genes:
         overlay_genes = False
+
+    if labels is not None:
+        label_inv = invert_dict(labels)
+        label_inv = {k:list(set(v).intersection(set(df.index))) for k, v in label_inv}
 
     cmaps = []
     if overlay_genes and not merge_genes:         # Multiple colors required
@@ -130,6 +147,10 @@ def main():
             if not (merge_genes and gene_index < numgenes - 1):
                 scatter = ax.scatter(x=scatter_df["x"], y=scatter_df["y"], s=scaled_marker_size, c=values_df, cmap=cmaps[gene_index % len(cmaps)]) #Amp_3.mpl_colormap)
 
+                if labels is not None and not overlay_genes:
+                    msg = "* Percentages of each group expressing {} at threshold {} *".format(gene_id, threshold)
+                    gn.add_result(msg, "markdown")
+                    show_percentages(gn, label_inv, values_df, threshold)
                 cax = divider.append_axes('bottom', size=0.15, pad=0.01)
                 cbar = fig.colorbar(scatter, cax=cax, orientation='horizontal', aspect=300)
                 #cbar = fig.colorbar(scatter, cax=ax[1+(gene_index%num_cbars)], orientation='horizontal', aspect=40)
@@ -151,9 +172,17 @@ def main():
                 if gene_index == numgenes - 1:
                     cax.tick_params(axis="x",direction="inout", pad=-1)
                     gn.add_current_figure_to_results("Scatter-plot of {} expression".format(gene_ids), dpi=75)
+                    if labels is not None:
+                        msg = "* Percentages of each group expressing merge at threshold {} *".format(threshold)
+                        gn.add_result(msg, "markdown")
+                        show_percentages(gn, label_inv, values_df, threshold)
             elif not overlay_genes:
                 cax.tick_params(axis="x",direction="inout", pad=-1)
                 gn.add_current_figure_to_results("Scatter-plot of {} expression".format(gene_id), dpi=75)
+                if labels is not None:
+                    msg = "* Percentages of each group expressing {} at threshold {} *".format(gene_id, threshold)
+                    gn.add_result(msg, "markdown")
+                    show_percentages(gn, label_inv, values_df, threshold)
             else:
                 if gene_index < numgenes-1:
                     cax.tick_params(axis="x",direction="in", pad=-1)
