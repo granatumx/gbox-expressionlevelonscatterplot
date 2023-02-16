@@ -153,7 +153,7 @@ def main():
 
     # Get the centers of each cluster on the coordinates
     if labels is not None:
-        label_centers = {k:(x_df.loc[v, "x"].mean(), y_df.loc[v, "y"]) for k, v in label_inv.items()}
+        label_centers = {k:(x_df.loc[v, "x"].mean(), y_df.loc[v, "y"].mean()) for k, v in label_inv.items()}
 
     values_df = np.clip(values, min_level, max_level, out=None)
     values_df = values_df.loc[x_df.index, :]       # Ensure alignment
