@@ -111,7 +111,7 @@ def main():
     # Split gene list first into gene names with corresponding scale
     gene_scale_tuples = [(gene_eqs.strip(), 1.0) if len(gene_eqs.strip().split("="))<2 else tuple(gene_eqs.strip().split("=")) for gene_eqs in gene_ids.split(',')]
     gene_list = [gene for gene, scale in gene_scale_tuples]
-    cmap_genes = {gene_list[i]:cmaps[i] for i in range(len(cmaps))}
+    cmap_genes = {gene_list[i]:cmaps[i % len(cmaps)] for i in range(len(gene_list))}
 
     # if the gene ID entered is not present in the assay
     # Communicate it to the user and output a table of available gene ID's
