@@ -173,7 +173,7 @@ def main():
         if labels is not None and label_groups:
             add_annotations(ax, label_centers)
         gn.add_current_figure_to_results("Scatter-plot of summed {} expression".format(gene_ids), dpi=75)
-    else if overlay_genes:
+    elif overlay_genes:
         ax, divider = start_plot()
         cax = None # Will be the last color axis added
         for gene in gene_list:
