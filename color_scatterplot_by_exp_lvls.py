@@ -50,7 +50,7 @@ def start_plot(dim_names):
     ax.xaxis.set_tick_params(labelbottom=False)
     ax.yaxis.set_tick_params(labelleft=False)
     ax.grid(False)
-    return ax, divider
+    return fig, ax, divider
 
 def add_annotations(ax, label_centers):
     for grp, center in label_centers.items():
@@ -168,7 +168,7 @@ def main():
     # Now we can easily generate the scatter plots
     if merge_genes:
         # Generate scatter with just merged genes
-        ax, divider = start_plot(dim_names)
+        fig, ax, divider = start_plot(dim_names)
         scatter = ax.scatter(x=x_df["x"], y=y_df["y"], s=scaled_marker_size[gene_ids], c=values_df[gene_ids], cmap=cmaps[len(cmaps)-1]) #Amp_3.mpl_colormap)
         cax = divider.append_axes('bottom', size=0.15, pad=0.01)
         cax.tick_params(axis="x",direction="inout", pad=-1)
@@ -177,7 +177,7 @@ def main():
             add_annotations(ax, label_centers)
         gn.add_current_figure_to_results("Scatter-plot of summed {} expression".format(gene_ids), dpi=75)
     elif overlay_genes:
-        ax, divider = start_plot(dim_names)
+        fig, ax, divider = start_plot(dim_names)
         cax = None # Will be the last color axis added
         for gene in gene_list:
             scatter = ax.scatter(x=x_df["x"], y=y_df["y"], s=scaled_marker_size[gene], c=values_df[gene], cmap=cmap_genes[gene])
@@ -193,7 +193,7 @@ def main():
         gn.add_current_figure_to_results("Scatter-plot of {} expression".format(gene_ids), dpi=75)
     else:
         for gene in gene_list:
-            ax, divider = start_plot(dim_names)
+            fig, ax, divider = start_plot(dim_names)
             scatter = ax.scatter(x=x_df["x"], y=y_df["y"], s=scaled_marker_size[gene], c=values_df[gene], cmap=cmap_genes[gene])
             cax = divider.append_axes('bottom', size=0.15, pad=0.01)
             cbar = fig.colorbar(scatter, cax=cax, orientation='horizontal', aspect=300)
