@@ -156,11 +156,14 @@ def main():
         label_centers = {k:(x_df.loc[v, "x"].mean(), y_df.loc[v, "y"]) for k, v in label_inv.items()}
 
     values_df = np.clip(values, min_level, max_level, out=None)
-    values_df.loc[x_df.index, :]       # Ensure alignment
+    values_df = values_df.loc[x_df.index, :]       # Ensure alignment
     min_value = np.nanmin(values_df)
     max_value = np.nanmax(values_df)
     scaled_marker_size = (max_marker_area-min_marker_area)*(values_df-min_value)/(max_value-min_value) + min_marker_area
     scaled_marker_size = scaled_marker_size*scaled_marker_size
+    print(values_df.head(), flush=True)
+    print(x_df.head(), flush=True)
+    print(y_df.head(), flush=True)
 
     # Now we can easily generate the scatter plots
     if merge_genes:
