@@ -132,7 +132,7 @@ def main():
     if labels is not None:
         percentages = pd.concat([((values.loc[v, :] >= threshold).sum()+0.0).to_frame().T*100.0/len(v) for k, v in label_inv.items()], axis=0).round(2)
         percentages["# Cells"] = [len(v) for k, v in label_inv.items()]
-        percentages.index = list(invdict.keys())
+        percentages.index = list(label_inv.keys())
     else:
         percentages = ((values >= threshold).sum()+0.0).to_frame().T*100.0 / values.shape[0]
         percentages["# Cells"] = values.shape[0]
