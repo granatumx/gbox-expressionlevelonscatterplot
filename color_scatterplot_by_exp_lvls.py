@@ -120,7 +120,7 @@ def main():
         genes_in_assay = pd.DataFrame(df.columns.tolist(), columns=['Gene unavailable in assay: choose from below'])
         gn.add_pandas_df(genes_in_assay, description)
         gn.commit()
-        break
+        return
     
     # Create scatter_df, extra column if merging, and show counts in a column if merging
     merge_scatters = [df[gene]*scale for gene, scale in gene_scale_tuples]  # will be the list of scatter_dfs to merge
