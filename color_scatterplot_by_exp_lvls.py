@@ -109,7 +109,7 @@ def main():
     numgenes = len(gene_ids.split(','))    # Probably can drop this
 
     # Split gene list first into gene names with corresponding scale
-    gene_scale_tuples = [(gene_eqs.strip(), 1.0) if len(gene_eqs.strip().split("="))>1 else tuple(gene_eqs.strip().split("=")) for gene_eqs in gene_ids.split(',')]
+    gene_scale_tuples = [(gene_eqs.strip(), 1.0) if len(gene_eqs.strip().split("="))<2 else tuple(gene_eqs.strip().split("=")) for gene_eqs in gene_ids.split(',')]
     gene_list = [gene for gene, scale in gene_scale_tuples]
     cmap_genes = {gene_list[i]:cmaps[i] for i in range(len(cmaps))}
 
