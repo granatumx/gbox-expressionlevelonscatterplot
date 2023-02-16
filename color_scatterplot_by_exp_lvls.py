@@ -54,7 +54,7 @@ def start_plot(dim_names):
 
 def add_annotations(ax, label_centers):
     for grp, center in label_centers.items():
-        ax.annotation(grp, xy=center, xytext=center)
+        ax.annotate(grp, xy=center, xytext=center)
 
 def main():
     gn = Granatum()
