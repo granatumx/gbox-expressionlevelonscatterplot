@@ -169,7 +169,8 @@ def main():
     if merge_genes:
         # Generate scatter with just merged genes
         fig, ax, divider = start_plot(dim_names)
-        scatter = ax.scatter(x=x_df["x"], y=y_df["y"], s=scaled_marker_size[gene_ids], c=values_df[gene_ids], cmap=cmaps[len(cmaps)-1]) #Amp_3.mpl_colormap)
+        zorder = np.argsort(values_df[gene_ids])
+        scatter = ax.scatter(x=x_df["x"][zorder], y=y_df["y"][zorder], s=scaled_marker_size[gene_ids][zorder], c=values_df[gene_ids][zorder], cmap=cmaps[len(cmaps)-1]) #Amp_3.mpl_colormap)
         cax = divider.append_axes('bottom', size=0.15, pad=0.01)
         cax.tick_params(axis="x",direction="inout", pad=-1)
         cbar = fig.colorbar(scatter, cax=cax, orientation='horizontal', aspect=300)
@@ -180,7 +181,8 @@ def main():
         fig, ax, divider = start_plot(dim_names)
         cax = None # Will be the last color axis added
         for gene in gene_list:
-            scatter = ax.scatter(x=x_df["x"], y=y_df["y"], s=scaled_marker_size[gene], c=values_df[gene], cmap=cmap_genes[gene])
+            zorder = np.argsort(values_df[gene])
+            scatter = ax.scatter(x=x_df["x"][zorder], y=y_df["y"][zorder], s=scaled_marker_size[gene][zorder], c=values_df[gene][zorder], cmap=cmap_genes[gene])
             cax = divider.append_axes('bottom', size=0.15, pad=0.01)
             cbar = fig.colorbar(scatter, cax=cax, orientation='horizontal', aspect=300)
             cbar.ax.set_ylabel(gene, rotation=0)
@@ -194,7 +196,8 @@ def main():
     else:
         for gene in gene_list:
             fig, ax, divider = start_plot(dim_names)
-            scatter = ax.scatter(x=x_df["x"], y=y_df["y"], s=scaled_marker_size[gene], c=values_df[gene], cmap=cmap_genes[gene])
+            zorder = np.argsort(values_df[gene])
+            scatter = ax.scatter(x=x_df["x"][zorder], y=y_df["y"][zorder], s=scaled_marker_size[gene][zorder], c=values_df[gene][zorder], cmap=cmap_genes[gene])
             cax = divider.append_axes('bottom', size=0.15, pad=0.01)
             cbar = fig.colorbar(scatter, cax=cax, orientation='horizontal', aspect=300)
             cbar.ax.set_ylabel(gene, rotation=0)
